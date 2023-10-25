@@ -4,6 +4,7 @@ const {
   getUserById,
   createData,
   updateData,
+  deleteData,
 } = require("../service/user.service.js");
 
 const route = express.Router();
@@ -42,6 +43,16 @@ route.put("/:id", (req, res) => {
     const { id } = req.params;
     const { name, surname, email, pwd } = req.body;
     const data = updateData(id, name, surname, email, pwd);
+    res.status(201).send(data);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
+route.delete("/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = deleteData(id);
     res.status(201).send(data);
   } catch (error) {
     res.status(404).send(error.message);

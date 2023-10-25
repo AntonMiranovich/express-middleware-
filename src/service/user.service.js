@@ -124,4 +124,11 @@ function updateData(id, name, surname, email, pwd) {
   return filtered;
 }
 
-module.exports = { getAllUsers, getUserById, createData, updateData };
+function deleteData(id) {
+  const filtered = array.filter((el) => el.id != id);
+  if (filtered.length == array.length)
+    throw new Error("id is not found database");
+  return filtered;
+}
+
+module.exports = { getAllUsers, getUserById, createData, updateData,deleteData };
