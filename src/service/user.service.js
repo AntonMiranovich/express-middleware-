@@ -1,127 +1,63 @@
-const array = [
-  {
-    id: 1,
-    name: "Hanna",
-    surname: "Pleshko",
-    email: "hannapleshko@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 2,
-    name: "Есения",
-    surname: "Грант",
-    email: "yesgrant@mail.ru",
-    pwd: "12345678",
-  },
-  {
-    id: 3,
-    name: "Анастасия",
-    surname: "Павлова",
-    email: "pavlova@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 4,
-    name: "Мария",
-    surname: "Гардон",
-    email: "gardon@mail.ru",
-    pwd: "12345678",
-  },
-  {
-    id: 5,
-    name: "Марта",
-    surname: "Котикова",
-    email: "martaktik@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 6,
-    name: "Борис",
-    surname: "Юревич",
-    email: "testdata@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 7,
-    name: "Рыжик",
-    surname: "Рыжий",
-    email: "email@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 8,
-    name: "Рейна",
-    surname: "Собачкова",
-    email: "dogdoggav@mail.ru",
-    pwd: "12345678",
-  },
-  {
-    id: 9,
-    name: "Максим",
-    surname: "Николаев",
-    email: "hanna@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 10,
-    name: "Константин",
-    surname: "Константинов",
-    email: "konst@mail.ru",
-    pwd: "12345678",
-  },
-  {
-    id: 11,
-    name: "Иван",
-    surname: "Иванов",
-    email: "ivaniv@gmail.com",
-    pwd: "12345678",
-  },
-  {
-    id: 12,
-    name: "Николай",
-    surname: "Николаев",
-    email: "nikkkk@mail.ru",
-    pwd: "12345678",
-  },
-];
+const fs = require("fs");
+const path = "./storage/storage.json";
 
 function getAllUsers() {
-  if (!array) throw new Error("Empty");
-  return array;
+  const data = JSON.parse(fs.readFileSync(path));
+  if (!data.length) throw new Error("data is empty");
+  return data;
 }
 
-function getUserById(id) {
-  const filtered = array.filter((el) => el.id == id);
-  if (!filtered.length) throw new Error("user we this id not found");
+function getById(id) {
+  const data = JSON.parse(fs.readFileSync(path));
+  const filtered = data.filter((el) => el.id == id);
+  if (!filtered.length) throw new Error("id is not found");
   return filtered;
 }
 
-function createData(name, surname, email, pwd) {
-  const filtered = array.filter((el) => el.email == email);
-  if (filtered.length > 0) throw new Error("email already exist");
-  const newObj = {
-    id: array.length + 1,
-    name: name,
-    surname: surname,
-    email: email,
-    pwd: pwd,
-  };
-  array.push(newObj);
-  return array;
+function createUser(name, surname, email, pwd) {
+  const data = JSON.parse(fs.readFileSync(path));
+  const filtered = data.filter((el) => el.email == email);
+  if (filtered.length == 0) throw new Error("Email already exist");
+  const newItem = { id: data.length + 1, name, surname, email, pwd };
+  data.push(newItem);
+  fs.writeFileSync(path, JSON.stringify(data));
+  return data;
 }
 
-function updateData(id, name, surname, email, pwd) {
-  const filtered = array.filter((el) => el.id != id);
-  if (filtered.length == array.length) throw new Error("id is not found");
-  const newObj = {
-    id: id,
-    name: name,
-    surname: surname,
-    email: email,
-    pwd: pwd,
-  };
-  filtered.push(newObj);
+function patchUser(id, clientObj) {
+  const data = JSON.parse(fs.readFileSync(path));
+  const oldData = data.filter((el) => el.id == id);
+  if (oldData.length == 0) throw new Error("id is not found");
+  const newData = { ...oldData[0], ...clientObj };
+  const filtered = data.filter((el) => el.id != id);
+  filtered.push(newData);
+  fs.writeFileSync(path, JSON.stringify(filtered));
   return filtered;
 }
 
-module.exports = { getAllUsers, getUserById, createData, updateData };
+function updateById(id, name, surname, email) {
+  const data = JSON.parse(fs.readFileSync(path));
+  const filtered = data.filter((el) => el.id != id);
+  if (filtered.length == data.length) throw new Error("id is not found");
+  const newItem = { id, name, surname, email };
+  filtered.push(newItem);
+  fs.writeFileSync(path, JSON.stringify(filtered));
+  return filtered;
+}
+
+function deleteUser(id) {
+  const data = JSON.parse(fs.readFileSync(path));
+  const filtered = data.filter((el) => el.id != id);
+  if (data.length == filtered.length) throw new Error("id is not found");
+  fs.writeFileSync(path, JSON.stringify(filtered));
+  return data;
+}
+
+module.exports = {
+  getAllUsers,
+  deleteUser,
+  getById,
+  updateById,
+  createUser,
+  patchUser,
+};
