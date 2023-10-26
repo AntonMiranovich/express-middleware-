@@ -35,7 +35,6 @@ function patchUser(id, clientObj) {
   return filtered;
 }
 
-<<<<<<< HEAD
 function updateById(id, name, surname, email) {
   const data = JSON.parse(fs.readFileSync(path));
   const filtered = data.filter((el) => el.id != id);
@@ -62,13 +61,3 @@ module.exports = {
   createUser,
   patchUser,
 };
-=======
-function deleteData(id) {
-  const filtered = array.filter((el) => el.id != id);
-  if (filtered.length == array.length)
-    throw new Error("id is not found database");
-  return filtered;
-}
-
-module.exports = { getAllUsers, getUserById, createData, updateData,deleteData };
->>>>>>> 46eab47ef5ea7fcbb0406749594fd2a7ea23a6c8
