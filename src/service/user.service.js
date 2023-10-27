@@ -17,7 +17,7 @@ function getById(id) {
 function createUser(name, surname, email, pwd) {
   const data = JSON.parse(fs.readFileSync(path));
   const filtered = data.filter((el) => el.email == email);
-  if (filtered.length == 0) throw new Error("Email already exist");
+  if (filtered.length > 0) throw new Error("Email already exist");
   const newItem = { id: data.length + 1, name, surname, email, pwd };
   data.push(newItem);
   fs.writeFileSync(path, JSON.stringify(data));
