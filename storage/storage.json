@@ -82,5 +82,12 @@
     "surname": "Miranovich",
     "email": "dsadadad@gmail.com",
     "pwd": "12345678"
+  },
+  {
+    "id": 13,
+    "name": "Hanna",
+    "surname": "Pleshko",
+    "email": "hannapleshko@gmail.com",
+    "pwd": "12345678"
   }
 ]
